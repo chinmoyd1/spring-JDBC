@@ -5,13 +5,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.in28minutes.jdbc.mySQL.mysqlConnection;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import com.in28minutes.jdbc.hsql.HsqlDatabase;
 import com.in28minutes.jdbc.model.Todo;
 
 class TodoMapper implements RowMapper<Todo> {
@@ -32,9 +31,10 @@ public class TodoDataServiceSpringJdbc {
 
 	private static final String DELETE_TODO_QUERY = "DELETE FROM TODO WHERE ID=?";
 
-	HsqlDatabase db = new HsqlDatabase();
-	JdbcTemplate jdbcTemplate = new JdbcTemplate(
-			new SingleConnectionDataSource(db.conn, false));
+	mysqlConnection db = new mysqlConnection();
+
+
+	JdbcTemplate jdbcTemplate = new JdbcTemplate(db.dataSource());
 
 	public static Logger logger = LogManager
 			.getLogger(TodoDataServiceSpringJdbc.class);
@@ -87,6 +87,6 @@ public class TodoDataServiceSpringJdbc {
 		List<Todo> todos = dataservice.retrieveAllTodos();
 		logger.info(todos);
 
-		dataservice.db.closeConnection();
+		//dataservice.db.closeConnection();
 	}
 }
